@@ -41,10 +41,12 @@ export class AuthService {
 
     const { accessToken, accessOptions } = this.setJwtAccessToken(
       user.id,
+      user.email,
       requestOrigin,
     );
     const { refreshToken, refreshOptions } = this.setJwtRefreshToken(
       user.id,
+      user.email,
       requestOrigin,
     );
 
@@ -81,8 +83,8 @@ export class AuthService {
   }
 
   // JWT 토큰 발급
-  setJwtAccessToken(id: string, requestDomain: string) {
-    const payload = { sub: id };
+  setJwtAccessToken(id: string, email: string, requestDomain: string) {
+    const payload = { sub: id, email };
     const maxAge = 1000 * 60 * 60; // 1 hour
     const accessToken = this.jwtService.sign(payload, {
       secret: this.appConfigService.jwtSecret,
@@ -94,8 +96,8 @@ export class AuthService {
     };
   }
 
-  setJwtRefreshToken(id: string, requestDomain: string) {
-    const payload = { sub: id };
+  setJwtRefreshToken(id: string, email: string, requestDomain: string) {
+    const payload = { sub: id, email };
     const maxAge = 1000 * 60 * 60 * 24 * 30; // 30 days
     const refreshToken = this.jwtService.sign(payload, {
       secret: this.appConfigService.jwtRefreshSecret,
